@@ -1,19 +1,23 @@
-extends partial/layout
+{% extends '_layout.swig' %}
+{% import '_macro/post.swig' as post_template %}
+{% import '_macro/sidebar.swig' as sidebar_template %}
 
-block header
-  include partial/header
+{% block title %}{{ config.title }}{% if theme.index_with_subtitle and config.subtitle %} - {{config.subtitle }}{% endif %}{% endblock %}
 
-block content
-  include mixins/post
-  +posts()
+{% block page_class %}
+  {% if is_home() %}page-home{% endif -%}
+{% endblock %}
 
-block sidebar
-  include partial/sidebar
-  
-block pagination
-  include mixins/paginator
-  +home()
-  
-block copyright
-  include partial/footer
-  
+{% block content %}
+  <section id="posts" class="posts-expand">
+    {% for post in page.posts %}
+      {{ post_template.render(post, true) }}
+    {% endfor %}
+  </section>
+
+  {% include '_partials/pagination.swig' %}
+{% endblock %}
+
+{% block sidebar %}
+  {{ sidebar_template.render(false) }}
+{% endblock %}
